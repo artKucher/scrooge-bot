@@ -1,0 +1,4 @@
+.idea
+.precomcache
+*.egg-info/
+.environment

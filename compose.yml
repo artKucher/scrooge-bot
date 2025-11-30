@@ -1,0 +1,9 @@
+services:
+  scrooge-bot:
+    image: scrooge-bot
+    container_name: scrooge-bot
+    build: .
+    command: python main.py
+    restart: always
+    volumes:
+      - .:/code

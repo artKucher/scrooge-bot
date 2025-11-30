@@ -1,0 +1,42 @@
+[project]
+name = 'spendings-bot'
+version = '0.1.0'
+description = 'Spendings bot'
+readme = 'README.md'
+requires-python = '>=3.13'
+dependencies = [
+    'playwright==1.55.0',
+    'requests==2.32.5',
+    'pydantic-settings',
+    'pre-commit',
+]
+
+[tool.setuptools]
+packages = []
+
+[tool.ruff]
+target-version = 'py313'
+line-length = 120
+fix = true
+
+[tool.ruff.lint]  # https://docs.astral.sh/ruff/rules/
+ignore = ['RUF001']
+select = [
+    'E',    # pycodestyle errors
+    'ERA',  # eradicate errors
+    'F',    # pyflakes
+    'I',    # isort
+    'N',    # pep8-naming
+    'A',    # flake8-builtins
+    'ANN',  # flake8-annotations
+    'B',    # flake8-bugbear
+    'B',    # flake8-bugbear
+    'PIE',  # flake8-pie
+    'RET',  # flake8-return
+    'SIM',  # flake8-simplify
+    'TC',   # flake8-type-checking
+    'C4',   # flake8-comprehensions
+    'PERF', # perflint
+    'RUF',  # ruff
+    'UP',   # pyupgrade
+]

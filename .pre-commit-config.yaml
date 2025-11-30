@@ -1,0 +1,35 @@
+fail_fast: false
+exclude: |
+    (?x)^(
+      .*\b(__pycache__)\b.*|
+      .*\b(.git)\b.*
+    )$
+default_language_version:
+  python: python3.13
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-toml
+      - id: debug-statements
+      - id: pretty-format-json
+        args:
+          - "--autofix"
+          - "--indent=4"
+          - "--no-sort-keys"
+      - id: trailing-whitespace
+      - id: no-commit-to-branch
+        args: [
+          --branch, main,
+        ]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
