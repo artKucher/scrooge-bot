@@ -12,6 +12,9 @@ dependencies = [
     'pre-commit==4.5.0',
 ]
 
+[tool.setuptools]
+packages = []
+
 [tool.ruff]
 target-version = 'py313'
 line-length = 120
