@@ -16,6 +16,9 @@ class TBankClient(BaseBankClient):
     ENTER_ONE_TIME_CODE_MESSAGE: Final[str] = "Введите код из СМС"
     ONE_TIME_CODE_REGEX: Final[str] = r"^\d{4}$"
 
+    ENTER_PASSWORD_MESSAGE: Final[str] = "Введите пароль"
+    PASSWORD_REGEX: Final[str] = r"^\S{6,}$"
+
     def __init__(self, telegram_client: TelegramClient) -> None:
         super().__init__(telegram_client)
         self._fast_login_code = tuple(str(randint(0, 9)) for _ in range(4))
@@ -35,10 +38,20 @@ class TBankClient(BaseBankClient):
         code = self._telegram_client.get_new_message(self.ONE_TIME_CODE_REGEX)
         self._page.locator('[automation-id="otp-input"]').fill(code)
 
+        if self._page.get_by_text("Введите пароль").is_visible():
+            self._fill_password()
+
         logger.info("Заполняем код для повторного входа")
         for number, code_digit in enumerate(self._fast_login_code):
             self._page.locator(f'[automation-id="pin-code-input-{number}"]').fill(code_digit)
 
+        self._page.locator('[automation-id="button-submit"]').click()
+
+    def _fill_password(self) -> None:
+        logger.info("Ожидаем ввод пароля в телеграмм")
+        self._telegram_client.send_message(self.ENTER_PASSWORD_MESSAGE)
+        password = self._telegram_client.get_new_message(self.PASSWORD_REGEX)
+        self._page.locator('[automation-id="password-input"]').fill(password)
         self._page.locator('[automation-id="button-submit"]').click()
 
     def logout(self) -> None:
@@ -56,5 +69,5 @@ class TBankClient(BaseBankClient):
         raw_balance = self._page.locator('xpath=//a[contains(@href, "/mybank/accounts/debit/")]').inner_text()
         raw_balance = raw_balance.split(",")[0]
         balance = re.sub(r"[^0-9]", "", raw_balance)
-        logger.info(f"Текущий баланс {balance}")
+        logger.info("Баланс получен")
         return int(balance)

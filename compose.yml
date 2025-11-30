@@ -3,7 +3,7 @@ services:
     image: scrooge-bot
     container_name: scrooge-bot
     build: .
-    command: python main.py
+    command: tail -f /dev/null #python main.py
     restart: always
     volumes:
       - .:/code

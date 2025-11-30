@@ -11,7 +11,7 @@ RUN apt-get update &&  \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./pyproject.toml .
-RUN pip install . && playwright install-deps chromium-headless-shell && playwright install chromium-headless-shell
+RUN pip install . && playwright install --with-deps chromium-headless-shell
 
 WORKDIR /code
 COPY . /code

@@ -4,6 +4,7 @@ from time import sleep
 
 import requests
 
+from app.decryptor import RSADecryptor
 from app.settings import logger, settings
 
 
@@ -22,7 +23,12 @@ class TelegramClient:
         response.raise_for_status()
 
     def get_new_message(self, message_pattern: str) -> str:
+        decryptor = RSADecryptor()
         now_timestamp = datetime.now().timestamp()
+
+        self.send_message(decryptor.ENCRYPTION_GUIDE)
+        self.send_message(decryptor.public_key)
+
         while True:
             response = requests.get(
                 url=f"https://api.telegram.org/bot{self._bot_token}/getUpdates",
@@ -35,6 +41,7 @@ class TelegramClient:
                 if message["message"]["date"] < now_timestamp:
                     continue
                 message_text = message["message"]["text"]
+                message_text = decryptor.decrypt(message_text)
                 if re.match(message_pattern, message_text):
                     return message_text
 

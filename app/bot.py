@@ -17,9 +17,7 @@ class Scrooge:
         # TODO: Сделать выбор банков
         self._bank_client = TBankClient(self._telegram_client)
         self._yesterday_balance = 0
-        self._next_balance_check_time = datetime.combine(
-            datetime.today() - timedelta(days=1), settings.SEND_BALANCE_MESSAGE_AT
-        )
+        self._next_balance_check_time = datetime.combine(datetime.today(), settings.SEND_BALANCE_MESSAGE_AT)
 
     def run(self) -> None:
         self._bank_client.pass_two_factor_authentication()
@@ -51,4 +49,7 @@ class Scrooge:
 
         allowed_expense_per_day = int(balance / days_before_next_month) if days_before_next_month else balance
 
-        return f"Вчера было потрачено {self._yesterday_balance - balance}₽. Осталось {allowed_expense_per_day}₽ в день."
+        return (
+            f"Вчера было потрачено {self._yesterday_balance - balance:_} ₽. "
+            f"Осталось {allowed_expense_per_day:_} ₽ в день."
+        )
