@@ -25,11 +25,11 @@ class TBankClient(BaseBankClient):
 
     def pass_two_factor_authentication(self) -> None:
         logger.info("Первый вход")
-        self._page.goto(self.LOGIN_URL)
-
         logger.info("Ожидаем ввод номера телефона в телеграмм")
         self._telegram_client.send_message(self.ENTER_LOGIN_MESSAGE)
         login = self._telegram_client.get_new_message(self.LOGIN_REGEX)
+
+        self._page.goto(self.LOGIN_URL)
         self._page.locator('[automation-id="phone-input"]').fill(login)
         self._page.locator('[automation-id="button-submit"]').click()
 
