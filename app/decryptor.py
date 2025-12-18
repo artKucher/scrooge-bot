@@ -38,7 +38,7 @@ class RSADecryptor:
     def decrypt(self, encrypted_message: str) -> str:
         try:
             message_bytes = base64.b64decode(encrypted_message)
-        except binascii.Error:
+        except (binascii.Error, ValueError):
             logger.error("Невозможно декодировать base64 входящего сообщения")
             return ""
 

@@ -42,7 +42,7 @@ class TelegramClient:
                     continue
                 if message["message"]["date"] < now_timestamp:
                     continue
-                message_text = message["message"]["text"]
+                message_text = message["message"].get("text", "")
                 message_text = decryptor.decrypt(message_text)
                 if re.match(message_pattern, message_text):
                     return message_text
