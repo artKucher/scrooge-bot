@@ -36,6 +36,8 @@ class TelegramClient:
             response.raise_for_status()
 
             for message in response.json()["result"]:
+                if "message" not in message:
+                    continue
                 if message["message"]["chat"]["id"] != self._chat_id:
                     continue
                 if message["message"]["date"] < now_timestamp:
