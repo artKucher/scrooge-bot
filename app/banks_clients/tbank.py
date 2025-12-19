@@ -23,6 +23,7 @@ class TBankClient(BaseBankClient):
         super().__init__(telegram_client)
         self._fast_login_code = tuple(str(randint(0, 9)) for _ in range(4))
 
+    @BaseBankClient.handle_error
     def pass_two_factor_authentication(self) -> None:
         logger.info("Первый вход")
         logger.info("Ожидаем ввод номера телефона в телеграмм")
@@ -47,6 +48,7 @@ class TBankClient(BaseBankClient):
 
         self._page.locator('[automation-id="button-submit"]').click()
 
+    @BaseBankClient.handle_error
     def _fill_password(self) -> None:
         logger.info("Ожидаем ввод пароля в телеграмм")
         self._telegram_client.send_message(self.ENTER_PASSWORD_MESSAGE)
@@ -54,17 +56,20 @@ class TBankClient(BaseBankClient):
         self._page.locator('[automation-id="password-input"]').fill(password)
         self._page.locator('[automation-id="button-submit"]').click()
 
+    @BaseBankClient.handle_error
     def logout(self) -> None:
         logger.info("Выходим из аккаунта")
         self._page.locator('[data-qa-type="navigation/username"]').click()
         self._page.locator('[data-qa-type="navigation/popover.logout"]').click()
 
+    @BaseBankClient.handle_error
     def login(self) -> None:
         logger.info("Входим по многоразовому коду")
         self._page.goto(self.LOGIN_URL)
         for number, code_digit in enumerate(self._fast_login_code):
             self._page.locator(f'[automation-id="pin-code-input-{number}"]').fill(code_digit)
 
+    @BaseBankClient.handle_error
     def get_balance(self) -> int:
         raw_balance = self._page.locator('xpath=//a[contains(@href, "/mybank/accounts/debit/")]').inner_text()
         raw_balance = raw_balance.split(",")[0]

@@ -21,7 +21,7 @@ line-length = 120
 fix = true
 
 [tool.ruff.lint]  # https://docs.astral.sh/ruff/rules/
-ignore = ['RUF001']
+ignore = ['RUF001', 'ANN401']
 select = [
     'E',    # pycodestyle errors
     'ERA',  # eradicate errors

@@ -11,6 +11,8 @@ class Settings(BaseSettings):
 
     HEADLESS: bool = True
     SLOW_MO: int = 500
+    RECORD_TRACING: bool = False
+
     LOGGING_LEVEL: str = "INFO"
     DELAY_SECONDS: int = 10
 
