@@ -34,10 +34,7 @@ class TBankClient(BaseBankClient):
         self._page.locator('[automation-id="phone-input"]').fill(login)
         self._page.locator('[automation-id="button-submit"]').click()
 
-        logger.info("Ожидаем ввод кода в телеграмм")
-        self._telegram_client.send_message(self.ENTER_ONE_TIME_CODE_MESSAGE)
-        code = self._telegram_client.get_new_message(self.ONE_TIME_CODE_REGEX)
-        self._page.locator('[automation-id="otp-input"]').fill(code)
+        self._fill_otp_code()
 
         if self._page.get_by_text("Введите пароль").is_visible():
             self._fill_password()
@@ -47,6 +44,13 @@ class TBankClient(BaseBankClient):
             self._page.locator(f'[automation-id="pin-code-input-{number}"]').fill(code_digit)
 
         self._page.locator('[automation-id="button-submit"]').click()
+
+    @BaseBankClient.handle_error
+    def _fill_otp_code(self) -> None:
+        logger.info("Ожидаем ввод кода в телеграмм")
+        self._telegram_client.send_message(self.ENTER_ONE_TIME_CODE_MESSAGE)
+        code = self._telegram_client.get_new_message(self.ONE_TIME_CODE_REGEX)
+        self._page.locator('[automation-id="otp-input"]').fill(code)
 
     @BaseBankClient.handle_error
     def _fill_password(self) -> None:
@@ -68,6 +72,9 @@ class TBankClient(BaseBankClient):
         self._page.goto(self.LOGIN_URL)
         for number, code_digit in enumerate(self._fast_login_code):
             self._page.locator(f'[automation-id="pin-code-input-{number}"]').fill(code_digit)
+
+        if self._page.get_by_text("Введите код").is_visible():
+            self._fill_otp_code()
 
     @BaseBankClient.handle_error
     def get_balance(self) -> int:
