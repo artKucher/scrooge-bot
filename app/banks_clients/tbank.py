@@ -74,7 +74,7 @@ class TBankClient(BaseBankClient):
         for number, code_digit in enumerate(self._fast_login_code):
             self._page.locator(f'[automation-id="pin-code-input-{number}"]').fill(code_digit)
 
-        if is_visible(self._page.get_by_text("Введите код")):
+        if is_visible(self._page.get_by_text("Отправили код")):
             self._fill_otp_code()
 
     @BaseBankClient.handle_error
