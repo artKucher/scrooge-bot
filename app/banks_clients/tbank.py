@@ -3,6 +3,7 @@ from random import randint
 from typing import Final
 
 from app.banks_clients.base import BaseBankClient
+from app.banks_clients.utils import is_visible
 from app.settings import logger
 from app.telegram_client import TelegramClient
 
@@ -36,7 +37,7 @@ class TBankClient(BaseBankClient):
 
         self._fill_otp_code()
 
-        if self._page.get_by_text("Введите пароль").is_visible():
+        if is_visible(self._page.get_by_text("Введите пароль")):
             self._fill_password()
 
         logger.info("Заполняем код для повторного входа")
@@ -73,7 +74,7 @@ class TBankClient(BaseBankClient):
         for number, code_digit in enumerate(self._fast_login_code):
             self._page.locator(f'[automation-id="pin-code-input-{number}"]').fill(code_digit)
 
-        if self._page.get_by_text("Введите код").is_visible():
+        if is_visible(self._page.get_by_text("Введите код")):
             self._fill_otp_code()
 
     @BaseBankClient.handle_error
