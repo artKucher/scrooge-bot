@@ -45,9 +45,9 @@ class Scrooge:
     def _make_balance_message(self, balance: int) -> str:
         today = datetime.today()
         days_in_current_month = monthrange(month=today.month, year=today.year)[-1]
-        days_before_next_month = days_in_current_month - today.day
+        days_before_next_month = days_in_current_month - today.day + 1
 
-        allowed_expense_per_day = int(balance / days_before_next_month) if days_before_next_month else balance
+        allowed_expense_per_day = int(balance / days_before_next_month)
 
         return (
             f"Вчера было потрачено {self._yesterday_balance - balance:_} ₽. "
