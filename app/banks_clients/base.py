@@ -19,6 +19,7 @@ class BaseBankClient(ABC):
     STARTUP_HEADERS: Final[dict[str, str]] = {
         "Sec-CH-UA": '"Google Chrome";v="125", "Chromium";v="125", "Not-A.Brand";v="24"'
     }
+    TIMEOUT_MS: Final[int] = 120_000
 
     def __init__(self, telegram_client: TelegramClient) -> None:
         playwright_instance = sync_playwright().start()
@@ -27,6 +28,8 @@ class BaseBankClient(ABC):
         if settings.RECORD_TRACING:
             context.tracing.start(snapshots=True, screenshots=True)
         self._page = context.new_page()
+        self._page.set_default_timeout(self.TIMEOUT_MS)
+        self._page.set_default_navigation_timeout(self.TIMEOUT_MS)
         self._telegram_client = telegram_client
 
     @abstractmethod
