@@ -65,7 +65,8 @@ class TBankClient(BaseBankClient):
     def logout(self) -> None:
         logger.info("Выходим из аккаунта")
         self._page.locator('[data-qa-type="navigation/username"]').click()
-        self._page.locator('[data-qa-type="navigation/popover.logout"]').click()
+        with self._page.expect_navigation(wait_until="networkidle"):
+            self._page.locator('[data-qa-type="navigation/popover.logout"]').click()
 
     @BaseBankClient.handle_error
     def login(self) -> None:
